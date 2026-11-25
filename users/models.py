@@ -78,3 +78,68 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name or self.email
+
+
+class Payment(models.Model):
+    """Модель платежа пользователя."""
+
+    class PaymentMethod(models.TextChoices):
+        CASH = "cash", "Наличные"
+        TRANSFER = "transfer", "Перевод на счёт"
+
+    user = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        related_name="payments",
+        verbose_name="Пользователь",
+    )
+    payment_date = models.DateTimeField(
+        verbose_name="Дата оплаты",
+    )
+    course = models.ForeignKey(
+        "lms.Course",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="payments",
+        verbose_name="Оплаченный курс",
+    )
+    lesson = models.ForeignKey(
+        "lms.Lesson",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="payments",
+        verbose_name="Оплаченный урок",
+    )
+    amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name="Сумма оплаты",
+    )
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PaymentMethod.choices,
+        verbose_name="Способ оплаты",
+    )
+
+    class Meta:
+        verbose_name = "Платёж"
+        verbose_name_plural = "Платежи"
+        ordering = ["-payment_date"]
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    models.Q(course__isnull=False, lesson__isnull=True)
+                    | models.Q(course__isnull=True, lesson__isnull=False)
+                ),
+                name="payment_course_or_lesson",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(amount__gt=0),
+                name="payment_positive_amount",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.user.email}: {self.amount} руб."

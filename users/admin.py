@@ -2,13 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from users.forms import CustomUserChangeForm, CustomUserCreationForm
-from users.models import User
+from users.models import Payment, User
 
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    """Настройки административной панели пользователей."""
-
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
@@ -37,17 +35,16 @@ class CustomUserAdmin(UserAdmin):
     )
 
     ordering = ("email",)
-
-    readonly_fields = (
-        "last_login",
-        "date_joined",
-    )
+    readonly_fields = ("last_login", "date_joined")
 
     fieldsets = (
         (
             None,
             {
-                "fields": ("email", "password"),
+                "fields": (
+                    "email",
+                    "password",
+                ),
             },
         ),
         (
@@ -77,7 +74,10 @@ class CustomUserAdmin(UserAdmin):
         (
             "Важные даты",
             {
-                "fields": ("last_login", "date_joined"),
+                "fields": (
+                    "last_login",
+                    "date_joined",
+                ),
             },
         ),
     )
@@ -95,3 +95,29 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "payment_date",
+        "course",
+        "lesson",
+        "amount",
+        "payment_method",
+    )
+
+    list_filter = (
+        "payment_method",
+        "payment_date",
+    )
+
+    search_fields = (
+        "user__email",
+        "course__title",
+        "lesson__title",
+    )
+
+    ordering = ("-payment_date",)

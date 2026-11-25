@@ -1,0 +1,78 @@
+[
+    {
+        "model": "users.user",
+        "pk": 9001,
+        "fields": {
+            "email": "fixture.student@example.com",
+            "password": "!",
+            "first_name": "Test",
+            "last_name": "Student",
+            "phone": "",
+            "city": "Saint Petersburg",
+            "avatar": "",
+            "is_staff": false,
+            "is_active": true,
+            "is_superuser": false,
+            "last_login": null,
+            "date_joined": "2026-11-01T10:00:00Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "lms.course",
+        "pk": 9001,
+        "fields": {
+            "title": "Python Backend — Fixture",
+            "preview": null,
+            "description": "Тестовый курс для проверки платежей."
+        }
+    },
+    {
+        "model": "lms.lesson",
+        "pk": 9001,
+        "fields": {
+            "title": "Основы Django REST Framework",
+            "description": "Тестовый урок.",
+            "preview": null,
+            "video_url": "https://example.com/video/1",
+            "course": 9001
+        }
+    },
+    {
+        "model": "users.payment",
+        "pk": 9001,
+        "fields": {
+            "user": 9001,
+            "payment_date": "2026-11-10T10:00:00Z",
+            "course": 9001,
+            "lesson": null,
+            "amount": "15000.00",
+            "payment_method": "transfer"
+        }
+    },
+    {
+        "model": "users.payment",
+        "pk": 9002,
+        "fields": {
+            "user": 9001,
+            "payment_date": "2026-11-15T10:00:00Z",
+            "course": null,
+            "lesson": 9001,
+            "amount": "2500.00",
+            "payment_method": "cash"
+        }
+    },
+    {
+        "model": "users.payment",
+        "pk": 9003,
+        "fields": {
+            "user": 9001,
+            "payment_date": "2026-11-20T10:00:00Z",
+            "course": null,
+            "lesson": 9001,
+            "amount": "3000.00",
+            "payment_method": "transfer"
+        }
+    }
+]
